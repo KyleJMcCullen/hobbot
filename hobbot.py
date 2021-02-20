@@ -105,6 +105,11 @@ async def new_hobby(hobchannel):
 
     await hobchannel.send(f"\~\~\~\~\~\~\~\~\~\~ {newhobby}! \~\~\~\~\~\~\~\~\~\~")
 
+#return (current hobby, vetoes)
+def get_current_hobby_and_vetoes():
+    currentjson = get_json_from_file(PATH_CURRENT)
+    return (currentjson["name"], currentjson["vetoes"])
+
 #print current hobby
 async def current_hobby(hobchannel):
     currentjson = get_json_from_file(PATH_CURRENT)
@@ -118,6 +123,15 @@ async def current_hobby(hobchannel):
 
     await hobchannel.send(f"Current hobby is {current} ({vetoes} vetoes).")
     
+#get wikipedia blurb for topic
+async def get_summary(hobchannel, topic=None):
+    if (topic == None):
+        topic, _ = get_current_hobby_and_vetoes()
+
+    try:
+        await hobchannel.send(wikipedia.summary(topic, 3))
+    except wikipedia.exceptions.PageError:
+        await hobchannel.send("Could not find or suggest wikipedia page for " + topic)
 
 #command functionality
 @client.event
@@ -147,6 +161,8 @@ async def on_message(msg):
         await new_hobby(hobchannel)
     if (msgtext == "!currenthobby"):
         await current_hobby(hobchannel)
+    if (msgtext == "!summary"):
+        await get_summary(hobchannel)
 
     #testing
     if (msgtext == "greetings hobbot"):
