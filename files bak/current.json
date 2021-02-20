@@ -1,4 +1,6 @@
 {
     "name": "NONE",
-    "vetoes": 0
+    "vetoes": 0,
+    "vetoers": [],
+    "notes": ""
 }
