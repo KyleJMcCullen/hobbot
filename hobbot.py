@@ -27,7 +27,7 @@ PATH_VETOED = "files/vetoed.txt"
 client = discord.Client()
 
 ##################################################
-## ADD SUMMARY CAPABILITY FOR COMPLETED HOBBIES ##
+##  ADD NOTES CAPABILITY FOR COMPLETED HOBBIES  ##
 ##################################################
 
 #boot
@@ -112,21 +112,21 @@ def get_current_hobby_and_vetoes():
 
 #print current hobby
 async def current_hobby(hobchannel):
-    currentjson = get_json_from_file(PATH_CURRENT)
+    current, vetoes = get_current_hobby_and_vetoes()
 
-    if currentjson["name"] == JSON_NO_HOBBY:
+    if current == JSON_NO_HOBBY:
         await hobchannel.send("No current hobby. Use !newhobby to pick a new hobby.")
         return
-    
-    current = currentjson["name"]
-    vetoes = currentjson["vetoes"]
 
     await hobchannel.send(f"Current hobby is {current} ({vetoes} vetoes).")
     
 #get wikipedia blurb for topic
-async def get_summary(hobchannel, topic=None):
-    if (topic == None):
-        topic, _ = get_current_hobby_and_vetoes()
+async def get_summary(hobchannel):
+    topic, _ = get_current_hobby_and_vetoes()
+
+    if topic == JSON_NO_HOBBY:
+        await hobchannel.send("No current hobby. Use !newhobby to pick a new hobby.")
+        return
 
     try:
         await hobchannel.send(wikipedia.summary(topic, 3))
