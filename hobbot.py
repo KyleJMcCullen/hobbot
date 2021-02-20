@@ -3,6 +3,8 @@ import os
 import re
 
 import discord
+import json
+import wikipedia
 from dotenv import load_dotenv
 from random import randint
 from time import sleep
@@ -13,17 +15,20 @@ GUILD = os.getenv('DISCORD_GUILD')
 #CURSENT_ID = os.getenv('CURSENT_ID')
 HOBBIES_CHANNEL_ID = os.getenv('HOBBIES_CHANNEL_ID')
 HOBBIES_CHANNEL_NAME = "hobbies"
+JSON_NO_HOBBY = "NONE"
 
 PATH_ALL = "files/all.txt"
 PATH_COMPLETE = "files/complete.txt"
-PATH_CURRENT = "files/current.txt"
+PATH_CURRENT = "files/current.json"
 PATH_LATER = "files/later.txt"
 PATH_TODO = "files/todo.txt"
 PATH_VETOED = "files/vetoed.txt"
 
 client = discord.Client()
 
-
+##################################################
+## ADD SUMMARY CAPABILITY FOR COMPLETED HOBBIES ##
+##################################################
 
 #boot
 @client.event
@@ -52,11 +57,18 @@ async def upload_file(channel, relPath):
 def file_length(path):
     return len(open(path).readlines())
 
+#get return json dictionary
+def get_json_from_file(path):
+    with open(path) as f:
+        return json.load(f)
+
 #get new hobby for the week, ensuring last hobby was closed
 async def new_hobby(hobchannel):
+    currentjson = get_json_from_file(PATH_CURRENT)
+
     #if we already have a hobby, don't overwrite it
-    if file_length(PATH_CURRENT) > 0:
-        current = open(PATH_CURRENT).readline().strip()
+    if currentjson["name"] != JSON_NO_HOBBY:
+        current = currentjson["name"]
         await hobchannel.send(f"The current hobby is {current}. Use !complete, !veto, or !later to close this hobby.")
         return
     
@@ -75,13 +87,12 @@ async def new_hobby(hobchannel):
             if line.strip() != newhobby:
                 todofile.write(line)
 
-    todofile.close()
-
     with open(PATH_CURRENT, "w") as currentfile:
-        currentfile.write(newhobby + "\n")
-        currentfile.write("vetoes:0")
-
-    currentfile.close()
+        newjson = {
+            "name": newhobby,
+            "vetoes": 0
+        }
+        currentfile.write(json.dumps(newjson))
 
     lastmsg = await hobchannel.send("Next week's hobby is")
     sleep(1)
@@ -96,15 +107,14 @@ async def new_hobby(hobchannel):
 
 #print current hobby
 async def current_hobby(hobchannel):
-    if file_length(PATH_CURRENT) < 1:
+    currentjson = get_json_from_file(PATH_CURRENT)
+
+    if currentjson["name"] == JSON_NO_HOBBY:
         await hobchannel.send("No current hobby. Use !newhobby to pick a new hobby.")
         return
     
-    with open(PATH_CURRENT, "r") as currentfile:
-        current = currentfile.readline().strip()
-        vetoes = currentfile.readline().split(":")[1]
-    
-    currentfile.close()
+    current = currentjson["name"]
+    vetoes = currentjson["vetoes"]
 
     await hobchannel.send(f"Current hobby is {current} ({vetoes} vetoes).")
     
