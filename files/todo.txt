@@ -317,6 +317,7 @@ Martial arts
 Metal detecting 
 Modelism
 Motorcycling
+Meteorology
 Motor sports 
 Mountain biking 
 Mountaineering 
@@ -550,6 +551,7 @@ Geocaching
 Gongoozling 
 Herping
 Hiking/backpacking
+Meteorology
 People-watching
 Photography
 Satellite watching
