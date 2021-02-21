@@ -16,13 +16,14 @@ GUILD = os.getenv('DISCORD_GUILD')
 HOBBIES_CHANNEL_ID = os.getenv('HOBBIES_CHANNEL_ID')
 HOBBIES_CHANNEL_NAME = "hobbies"
 JSON_NO_HOBBY = "NONE"
+NUM_VETOES_TO_SKIP = 3
 
 PATH_ALL = "files/all.txt"
 PATH_COMPLETE = "files/complete.json"
 PATH_CURRENT = "files/current.json"
-PATH_LATER = "files/later.txt"
+PATH_LATER = "files/later.json"
 PATH_TODO = "files/todo.txt"
-PATH_VETOED = "files/vetoed.txt"
+PATH_VETOED = "files/vetoed.json"
 
 waiting_for_complete_confirm = False
 waiting_for_veto_confirm = False
@@ -108,7 +109,6 @@ async def new_hobby():
     with open(PATH_CURRENT, "w") as currentfile:
         newjson = {
             "name": newhobby,
-            "vetoes": 0,
             "vetoers": [],
             "notes": ""
         }
@@ -126,22 +126,22 @@ async def new_hobby():
     await hobchannel.send(f"\~\~\~\~\~\~\~\~\~\~ {newhobby}! \~\~\~\~\~\~\~\~\~\~")
 
 
-#return (current hobby, vetoes)
+#return current hobby
 def get_current_hobby():
     currentjson = get_json_from_file(PATH_CURRENT)
     return currentjson["name"]
-
-
-#return current hobby's vetoes
-def get_current_vetoes():
-    currentjson = get_json_from_file(PATH_CURRENT)
-    return currentjson["vetoes"]
 
 
 #return current hobby's vetoers
 def get_current_vetoers():
     currentjson = get_json_from_file(PATH_CURRENT)
     return currentjson["vetoers"]
+
+
+#return current hobby's veto count
+def get_current_vetoes():
+    vetoers = get_current_vetoers()
+    return len(vetoers)
 
 
 #return current hobby's notes
@@ -163,7 +163,7 @@ async def current_hobby():
 
 #get wikipedia blurb for topic
 async def get_summary():
-    topic = get_current_hobby
+    topic = get_current_hobby()
 
     if topic == JSON_NO_HOBBY:
         await hobchannel.send("No current hobby. Use !newhobby to pick a new hobby.")
@@ -183,7 +183,6 @@ def clear_text_file(path):
 def clear_current_hobby():
     newjson = {
         "name": JSON_NO_HOBBY,
-        "vetoes": 0,
         "vetoers": [],
         "notes": ""
     }
@@ -213,31 +212,78 @@ async def request_confirmation(type):
         waiting_for_later_confirm = True
 
 
-#complete hobby: save relevant info to complete.json, reset current.json
-async def mark_current_as_complete():
+#move current hobby to another json file
+def move_current_to_other_file(path):
     current = get_current_hobby()
-    vetoes = get_current_vetoes()
     vetoers = get_current_vetoers()
     notes = get_current_notes()
 
     #create new entry with info from current hobby
-    newentry = {current: {"vetoes": vetoes, "vetoers": vetoers, "notes": notes}}
+    newentry = {current: {"vetoers": vetoers, "notes": notes}}
 
     #get dict of completed hobbies
-    with open(PATH_COMPLETE) as completefile:
-        completed = json.load(completefile)
+    with open(path) as f:
+        filejson = json.load(f)
     
     #add now-completed hobby to list of completed hobbies
-    completed.update(newentry)
+    filejson.update(newentry)
 
     #write back to file
-    with open(PATH_COMPLETE, "w") as completefile:
-        json.dump(completed, completefile)
+    with open(path, "w") as f:
+        json.dump(filejson, f)
 
     #reset current hobby
     clear_current_hobby()
 
-    await hobchannel.send(f"{current} completed!")
+
+#complete hobby: save relevant info to complete.json, reset current.json
+async def mark_current_as_complete():
+    move_current_to_other_file(PATH_COMPLETE)
+
+    current = get_current_hobby()
+    await hobchannel.send(f"Completed {current}!")
+
+
+#move current hobby to the "to-be-done-later" list: 
+async def move_current_to_later():
+    move_current_to_other_file(PATH_LATER)
+
+    current = get_current_hobby()
+    await hobchannel.send(f"We'll get back to {current} later.")
+
+
+#count a veto if the player hasn't already vetoed it, and skip it if
+#enough vetoes are counted
+#(author is a Member or User object)
+async def handle_veto(author):
+    current = get_current_hobby()
+    vetoes = get_current_vetoes()
+    vetoers = get_current_vetoers()
+
+    nick = author.nick
+    if (nick == None):
+            nick = author.name
+
+    if (nick in vetoers):
+        await hobchannel.send(f"{nick} has already vetoed {current}!")
+        return
+
+    if (vetoes+1) >= NUM_VETOES_TO_SKIP:
+        move_current_to_other_file(PATH_VETOED)
+        vetoersstr = ", ".join(vetoers)
+        await hobchannel.send(f"{current} has been vetoed by {vetoersstr}, and {nick}!")
+    else:
+        vetoers.append(author.name) #use username, not nickname
+
+        with open(PATH_CURRENT) as currentfile:
+            jsondata = json.load(currentfile)
+        
+        jsondata["vetoers"] = vetoers
+
+        with open(PATH_CURRENT, "w") as currentfile:
+            json.dump(jsondata, currentfile)
+
+        await hobchannel.send(f"{nick} has voted to veto {current}!")
 
 
 #command functionality
@@ -280,21 +326,18 @@ async def on_message(msg):
     elif (msgtext == "!summary"):
         await get_summary()
     elif (msgtext == "!complete"):
-        await request_confirmation("complete")
-        return #don't reset waiting-for-confirm booleans
+        await mark_current_as_complete()
     elif (msgtext == "!veto"):
-        await (request_confirmation("veto"))
-        return #don't reset waiting-for-confirm booleans
+        await handle_veto(msg.author)
     elif (msgtext == "!later"):
-        await request_confirmation("request")
-        return #don't reset waiting-for-confirm booleans
+        await move_current_to_later()
         
     #responses
     elif (waiting_for_complete_confirm and msgtext.lower() in affirm_responses):
-        await mark_current_as_complete()
+        pass 
     elif (waiting_for_later_confirm and msgtext.lower() in affirm_responses):
-        pass
-    elif (waiting_for_later_confirm and msgtext.lower() in affirm_responses):
+        pass 
+    elif (waiting_for_veto_confirm and msgtext.lower() in affirm_responses):
         pass
 
     #testing
