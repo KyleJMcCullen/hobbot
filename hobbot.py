@@ -38,10 +38,8 @@ affirm_responses = ["yes", "y", "aye", "yeah", "yea", "ye", "ya",
 
 client = discord.Client()
 
-
-##################################################
-##  ADD NOTES CAPABILITY FOR COMPLETED HOBBIES  ##
-##################################################
+# - retrieve notes from a specific hobby
+# - pull from "later" bin
 
 
 #boot
@@ -248,7 +246,7 @@ async def mark_current_as_complete():
 async def move_current_to_later():
     current = get_current_hobby()
     move_current_to_other_file(PATH_LATER)
-    
+
     await hobchannel.send(f"We'll get back to {current} later.")
 
 
@@ -286,6 +284,50 @@ async def handle_veto(author):
         await hobchannel.send(f"{nick} has voted to veto {current}!")
 
 
+#add a note to the current hobby
+async def add_note_to_current(note, authorname):
+    with open(PATH_CURRENT) as currentfile:
+        jsondata = json.load(currentfile)
+    
+    current = get_current_hobby()
+    notes = get_current_notes()
+    notes += ("\n" if len(notes) > 0 else "") + note + f" ({authorname})"
+
+    jsondata["notes"] = notes
+
+    with open(PATH_CURRENT, "w") as currentfile:
+        json.dump(jsondata, currentfile)
+
+    await hobchannel.send(f"Added note to {current}. Full notes:\n{notes}")
+
+
+#list all commands
+async def list_commands():
+    commands = {
+        "!help": "List all commands",
+        "!listall": "Get complete list of all hobbies",
+        "!listlater": "Get list of hobbies to be completed later",
+        "!listtodo": "Get list of hobbies that have yet to be completed",
+        "!listvetoed": "Get list of vetoed hobbies",
+        "!newhobby": "Pull a new hobby from the todo list",
+        "!current *or* !currenthobby": "Get name and veto count of current hobby",
+        "!summary": "Try to pull a summary of the current hobby from Wikipedia",
+        "!complete": "Move current hobby to the list of completed hobbies",
+        "!veto": f"Vote to veto a hobby ({NUM_VETOES_TO_SKIP} needed to skip)",
+        "!later": "Move current hobby to the list of hobbies to be completed later",
+        "!addnote [note]": "Add a note to the current hobby"
+    }
+
+    outstr = ""
+
+    for key, value in sorted(commands.items()):
+        if (outstr != ""):
+            outstr += "\n"
+        outstr += f"{key}: {value}"
+
+    await hobchannel.send(outstr)
+
+
 #command functionality
 @client.event
 async def on_message(msg):
@@ -311,7 +353,9 @@ async def on_message(msg):
         return
 
     #commands
-    if (msgtext == "!listall"):
+    if (msgtext == "!help"):
+        await list_commands()
+    elif (msgtext == "!listall"):
         await upload_file(PATH_ALL)
     elif (msgtext == "!listlater"):
         await upload_file(PATH_LATER)
@@ -331,6 +375,8 @@ async def on_message(msg):
         await handle_veto(msg.author)
     elif (msgtext == "!later"):
         await move_current_to_later()
+    elif (str.startswith(msgtext, "!addnote ")):
+        await add_note_to_current(msgtext[9:], msg.author.name)
         
     #responses
     elif (waiting_for_complete_confirm and msgtext.lower() in affirm_responses):
