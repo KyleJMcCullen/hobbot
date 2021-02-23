@@ -219,6 +219,7 @@ def move_current_to_other_file(path):
     #create new entry with info from current hobby
     newentry = {current: {"vetoers": vetoers, "notes": notes}}
 
+
     #get dict of completed hobbies
     with open(path) as f:
         filejson = json.load(f)
