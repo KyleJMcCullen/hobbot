@@ -242,7 +242,7 @@ async def mark_current_as_complete():
     await hobchannel.send(f"Completed {current}!")
 
 
-#move current hobby to the "to-be-done-later" list: 
+# move current hobby to the "to-be-done-later" list: 
 async def move_current_to_later():
     current = get_current_hobby()
     move_current_to_other_file(PATH_LATER)
