@@ -181,7 +181,7 @@ async def print_summary(hobchannel):
         return
 
     try:
-        await hobchannel.send(wikipedia.summary(topic, 3))
+        await hobchannel.send("<" + wikipedia.page(topic).url + ">\n" + wikipedia.summary(topic, 3))
     except wikipedia.exceptions.PageError:
         await hobchannel.send("Could not find or suggest wikipedia page for " + topic)
 
