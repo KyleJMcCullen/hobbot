@@ -100,9 +100,9 @@ async def on_message(msg):
         await cmd.add_note_to_current(msgtext[9:], msg.author.name, hobchannel)
 
     #testing
-    elif (msgtext == "greetings hobbot"):
+    elif (msgtext == "greetings hobbot" or msgtext == "good morning hobbot" or msgtext == "good afternoon hobbot"):
         await hobchannel.send(f"greetings {msg.author.mention}")
-    elif (msgtext == "hobbot, shut down"):
+    elif (msgtext == "hobbot, shut down" or msgtext == "goodbye hobbot"):
         await hobchannel.send("goodbye world")
         await client.logout()
     elif (msgtext == "hobbot, initiate test"):
