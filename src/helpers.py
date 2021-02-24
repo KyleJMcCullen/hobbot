@@ -6,7 +6,6 @@ import json
 
 from constants import JSON_NO_HOBBY
 from constants import PATH_CURRENT
-from constants import PATH_COMPLETE
 import infogetters as info
 import fileutils as futils
 
@@ -24,14 +23,6 @@ def clear_current_hobby(hobchannel):
     #replace with default json values
     with open(PATH_CURRENT, "w") as currentfile:
         json.dump(newjson, currentfile)
-
-
-#complete hobby: save relevant info to complete.json, reset current.json
-async def mark_current_as_complete(hobchannel):
-    move_current_to_other_file(PATH_COMPLETE)
-
-    current = info.get_current_hobby_name()
-    await hobchannel.send(f"Completed {current}!")
 
 
 #move current hobby to another json file

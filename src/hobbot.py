@@ -21,10 +21,6 @@ import commands as cmd
 import fileutils as futils
 import infogetters as info
 
-waiting_for_complete_confirm = False
-waiting_for_veto_confirm = False
-waiting_for_later_confirm = False
-
 #hobbies channel
 hobchannel = None
 
@@ -67,9 +63,6 @@ async def on_message(msg):
     channel = msg.channel
     
     global hobchannel
-    global waiting_for_complete_confirm
-    global waiting_for_later_confirm
-    global waiting_for_veto_confirm
 
     hobchannel = get_channel(client.get_all_channels(), HOBBIES_CHANNEL_NAME)
 
@@ -82,7 +75,7 @@ async def on_message(msg):
 
     #commands
     if (msgtext == "!help"):
-        await cmd.list_commands()
+        await cmd.list_commands(hobchannel)
     elif (msgtext == "!listall"):
         await futils.upload_file_to_channel(PATH_ALL, hobchannel)
     elif (msgtext == "!listlater"):
@@ -92,19 +85,19 @@ async def on_message(msg):
     elif (msgtext == "!listvetoed"):
         await futils.upload_file_to_channel(PATH_VETOED, hobchannel)
     elif (msgtext == "!newhobby"):
-        await cmd.new_hobby()
+        await cmd.new_hobby(hobchannel)
     elif (msgtext in ["!currenthobby", "!current"]):
-        await cmd.current_hobby()
+        await cmd.print_current_hobby(hobchannel)
     elif (msgtext == "!summary"):
-        await cmd.get_summary()
+        await cmd.print_summary(hobchannel)
     elif (msgtext == "!complete"):
-        await cmd.mark_current_as_complete()
+        await cmd.mark_current_as_complete(hobchannel)
     elif (msgtext == "!veto"):
-        await cmd.handle_veto(msg.author)
+        await cmd.handle_veto(msg.author, hobchannel)
     elif (msgtext == "!later"):
-        await move_current_to_later()
+        await cmd.move_current_to_later(hobchannel)
     elif (str.startswith(msgtext, "!addnote ")):
-        await cmd.add_note_to_current(msgtext[9:], msg.author.name)
+        await cmd.add_note_to_current(msgtext[9:], msg.author.name, hobchannel)
 
     #testing
     elif (msgtext == "greetings hobbot"):

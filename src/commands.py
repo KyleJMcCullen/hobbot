@@ -14,6 +14,7 @@ import infogetters as info
 
 from constants import JSON_NO_HOBBY
 from constants import NUM_VETOES_TO_SKIP
+from constants import PATH_COMPLETE
 from constants import PATH_CURRENT
 from constants import PATH_LATER
 from constants import PATH_TODO
@@ -104,6 +105,14 @@ async def move_current_to_later(hobchannel):
     helpers.move_current_to_other_file(PATH_LATER)
 
     await hobchannel.send(f"We'll get back to {current} later.")
+
+
+#complete hobby: save relevant info to complete.json, reset current.json
+async def mark_current_as_complete(hobchannel):
+    helpers.move_current_to_other_file(PATH_COMPLETE)
+
+    current = info.get_current_hobby_name()
+    await hobchannel.send(f"Completed {current}!")
 
 
 #get new hobby for the week, ensuring last hobby was closed
