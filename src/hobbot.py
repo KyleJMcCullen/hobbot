@@ -18,7 +18,6 @@ from constants import PATH_TODO
 from constants import PATH_VETOED
 from constants import TOKEN
 import commands as cmd
-import fileutils as futils
 import infogetters as info
 
 #hobbies channel
@@ -77,13 +76,13 @@ async def on_message(msg):
     if (msgtext == "!help"):
         await cmd.list_commands(hobchannel)
     elif (msgtext == "!listall"):
-        await futils.upload_file_to_channel(PATH_ALL, hobchannel)
+        await cmd.upload_file_to_channel(PATH_ALL, hobchannel)
     elif (msgtext == "!listlater"):
-        await futils.upload_file_to_channel(PATH_LATER, hobchannel)
+        await cmd.upload_file_to_channel(PATH_LATER, hobchannel)
     elif (msgtext == "!listtodo"):
-        await futils.upload_file_to_channel(PATH_TODO, hobchannel)
+        await cmd.upload_file_to_channel(PATH_TODO, hobchannel)
     elif (msgtext == "!listvetoed"):
-        await futils.upload_file_to_channel(PATH_VETOED, hobchannel)
+        await cmd.upload_file_to_channel(PATH_VETOED, hobchannel)
     elif (msgtext == "!newhobby"):
         await cmd.new_hobby(hobchannel)
     elif (msgtext in ["!currenthobby", "!current"]):
