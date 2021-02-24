@@ -102,7 +102,7 @@ async def list_commands(hobchannel):
 # move current hobby to the "to-be-done-later" list: 
 async def move_current_to_later(hobchannel):
     current = info.get_current_hobby_name()
-    helpers.move_current_to_other_file(PATH_LATER)
+    helpers.move_current_to_other_file(PATH_LATER, hobchannel)
 
     await hobchannel.send(f"We'll get back to {current} later.")
 
