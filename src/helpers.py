@@ -26,7 +26,7 @@ def clear_current_hobby(hobchannel):
 
 
 #move current hobby to another json file
-def move_current_to_other_file(path):
+def move_current_to_other_file(path, hobchannel):
     current = info.get_current_hobby_name()
     vetoers = info.get_current_vetoers()
     notes = info.get_current_notes()
@@ -47,7 +47,7 @@ def move_current_to_other_file(path):
         json.dump(filejson, f)
 
     #reset current hobby
-    clear_current_hobby()
+    clear_current_hobby(hobchannel)
 
 
 """ unused, but holding on to it just in case
