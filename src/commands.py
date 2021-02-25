@@ -109,9 +109,9 @@ async def move_current_to_later(hobchannel):
 
 #complete hobby: save relevant info to complete.json, reset current.json
 async def mark_current_as_complete(hobchannel):
+    current = info.get_current_hobby_name()
     helpers.move_current_to_other_file_with_date(PATH_COMPLETE, hobchannel)
 
-    current = info.get_current_hobby_name()
     await hobchannel.send(f"Completed {current}!")
 
 
