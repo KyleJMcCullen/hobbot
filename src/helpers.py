@@ -56,7 +56,7 @@ def move_current_to_other_file_with_date(path, hobchannel):
     current = info.get_current_hobby_name()
     vetoers = info.get_current_vetoers()
     notes = info.get_current_notes()
-    date = datetime.date.today()
+    date = str(datetime.date.today())
 
     #create new entry with info from current hobby
     newentry = {current: {"vetoers": vetoers, "notes": notes, "date": date}}
