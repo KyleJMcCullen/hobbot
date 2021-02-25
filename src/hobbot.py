@@ -28,6 +28,7 @@ client = discord.Client()
 # TODO
 # - retrieve notes from a specific hobby
 # - pull from "later" bin
+# - add date to !complete
 
 
 #boot

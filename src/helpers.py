@@ -2,6 +2,7 @@
 backend-y helpers
 """
 
+import datetime
 import json
 
 from constants import JSON_NO_HOBBY
@@ -33,6 +34,32 @@ def move_current_to_other_file(path, hobchannel):
 
     #create new entry with info from current hobby
     newentry = {current: {"vetoers": vetoers, "notes": notes}}
+
+
+    #get dict of completed hobbies
+    with open(path) as f:
+        filejson = json.load(f)
+    
+    #add now-completed hobby to list of completed hobbies
+    filejson.update(newentry)
+
+    #write back to file
+    with open(path, "w") as f:
+        json.dump(filejson, f)
+
+    #reset current hobby
+    clear_current_hobby(hobchannel)
+
+
+#move current hobby to another json file
+def move_current_to_other_file_with_date(path, hobchannel):
+    current = info.get_current_hobby_name()
+    vetoers = info.get_current_vetoers()
+    notes = info.get_current_notes()
+    date = datetime.date.today()
+
+    #create new entry with info from current hobby
+    newentry = {current: {"vetoers": vetoers, "notes": notes, "date": date}}
 
 
     #get dict of completed hobbies
