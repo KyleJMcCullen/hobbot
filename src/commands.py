@@ -57,7 +57,7 @@ async def handle_veto(author, hobchannel):
     if (vetoes+1) >= NUM_VETOES_TO_SKIP:
         helpers.move_current_to_other_file(PATH_VETOED, hobchannel)
         vetoersstr = ", ".join(vetoers)
-        await hobchannel.send(f"{current} has been vetoed by {vetoersstr}, and {nick}!")
+        await hobchannel.send(f"{current} has been vetoed by {vetoersstr}, and {author.name}!")
     else:
         vetoers.append(author.name) #use username, not nickname
 
