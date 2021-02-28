@@ -26,9 +26,9 @@ hobchannel = None
 client = discord.Client()
 
 # TODO
-# - retrieve notes from a specific hobby
+# - retrieve info about a completed hobby
 # - pull from "later" bin
-# - add date to !complete
+# - make list{file} functions print out up to 2000 chars before uploading file
 
 
 #boot

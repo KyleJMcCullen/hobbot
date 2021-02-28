@@ -55,7 +55,7 @@ async def handle_veto(author, hobchannel):
         return
 
     if (vetoes+1) >= NUM_VETOES_TO_SKIP:
-        futils.move_current_to_other_file(PATH_VETOED)
+        helpers.move_current_to_other_file(PATH_VETOED, hobchannel)
         vetoersstr = ", ".join(vetoers)
         await hobchannel.send(f"{current} has been vetoed by {vetoersstr}, and {nick}!")
     else:
