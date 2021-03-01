@@ -98,8 +98,6 @@ async def on_message(msg):
         await cmd.move_current_to_later(hobchannel)
     elif (str.startswith(msgtext, "!addnote ")):
         await cmd.add_note_to_current(msgtext[9:], msg.author.name, hobchannel)
-    elif (str.startswith(msgtext, "!pickhobby ")):
-        await cmd.pick_hobby_from_later(msgtext[11:], hobchannel)
 
     #testing
     elif (msgtext == "greetings hobbot" or msgtext == "good morning hobbot" or msgtext == "good afternoon hobbot"):
