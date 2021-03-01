@@ -172,6 +172,7 @@ async def pick_hobby_from_later(hobby, hobchannel):
 
     #remove the new hobby from the later list
     with open(PATH_LATER, "r") as laterfile:
+        laterfile.seek(0)
         laterjson = json.load(laterfile)
 
     #get the 'official' name of the hobby from the list (really just gets capitalization correct)
