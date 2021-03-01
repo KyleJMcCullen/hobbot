@@ -170,18 +170,12 @@ async def pick_hobby_from_later(hobby, hobchannel):
         await hobchannel.send(f"The current hobby is {current}. Use !complete, !veto, or !later to close this hobby.")
         return
 
-    with open(PATH_LATER, "r") as laterfile:
-        lines = laterfile.readlines()
-
-    newhobby = None
-
     #remove the new hobby from the later list
     with open(PATH_LATER, "w") as laterfile:
-        for line in lines:
-            if line.strip().lower() != hobby.strip().lower():
-                laterfile.write(line)
-            else:
-                newhobby = line.strip()
+        laterjson = json.load(laterfile)
+
+    #get the 'official' name of the hobby from the list (really just gets capitalization correct)
+    newhobby = list(laterjson[hobby].keys())[0]
 
     if (newhobby == None):
         await hobchannel.send(f"Could not find hobby {hobby} in later.json.")
@@ -189,7 +183,7 @@ async def pick_hobby_from_later(hobby, hobchannel):
 
     with open(PATH_CURRENT, "w") as currentfile:
         newjson = {
-            "name": hobby,
+            "name": newhobby,
             "vetoers": [],
             "notes": ""
         }
