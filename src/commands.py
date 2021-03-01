@@ -160,6 +160,44 @@ async def new_hobby(hobchannel):
     await hobchannel.send(f"\~\~\~\~\~\~\~\~\~\~ {newhobby}! \~\~\~\~\~\~\~\~\~\~")
 
 
+#pick hobby from later list and set it as current
+async def pick_hobby_from_later(hobby, hobchannel):
+    currentjson = futils.get_json_from_file(PATH_CURRENT)
+
+    #if we already have a hobby, don't overwrite it
+    if currentjson["name"] != JSON_NO_HOBBY:
+        current = currentjson["name"]
+        await hobchannel.send(f"The current hobby is {current}. Use !complete, !veto, or !later to close this hobby.")
+        return
+
+    with open(PATH_LATER, "r") as laterfile:
+        lines = laterfile.readlines()
+
+    newhobby = None
+
+    #remove the new hobby from the later list
+    with open(PATH_LATER, "w") as laterfile:
+        for line in lines:
+            if line.strip().lower() != hobby.strip().lower():
+                laterfile.write(line)
+            else:
+                newhobby = line.strip()
+
+    if (newhobby == None):
+        await hobchannel.send(f"Could not find hobby {hobby} in later.json.")
+        return
+
+    with open(PATH_CURRENT, "w") as currentfile:
+        newjson = {
+            "name": hobby,
+            "vetoers": [],
+            "notes": ""
+        }
+        currentfile.write(json.dumps(newjson))
+
+    await hobchannel.send(f"{newhobby} has been selected for next week's hobby!")
+
+
 #print current hobby
 async def print_current_hobby(hobchannel):
     current = info.get_current_hobby_name()
