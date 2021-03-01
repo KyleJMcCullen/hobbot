@@ -23,8 +23,7 @@ from constants import PATH_VETOED
 
 #add a note to the current hobby
 async def add_note_to_current(note, authorname, hobchannel):
-    with open(PATH_CURRENT) as currentfile:
-        jsondata = json.load(currentfile)
+    jsondata = futils.get_json_from_file(PATH_CURRENT)
     
     current = info.get_current_hobby_name()
     notes = info.get_current_notes()
@@ -61,8 +60,7 @@ async def handle_veto(author, hobchannel):
     else:
         vetoers.append(author.name) #use username, not nickname
 
-        with open(PATH_CURRENT) as currentfile:
-            jsondata = json.load(currentfile)
+        jsondata = futils.get_json_from_file(PATH_CURRENT)
         
         jsondata["vetoers"] = vetoers
 
@@ -158,6 +156,36 @@ async def new_hobby(hobchannel):
     sleep(1)
 
     await hobchannel.send(f"\~\~\~\~\~\~\~\~\~\~ {newhobby}! \~\~\~\~\~\~\~\~\~\~")
+
+
+#pick specific hobby from 'later' list
+async def pick_hobby_from_later(hobby, hobchannel):
+    currentjson = futils.get_json_from_file(PATH_CURRENT)
+
+    #if we already have a hobby, don't overwrite it
+    if currentjson["name"] != JSON_NO_HOBBY:
+        current = currentjson["name"]
+        await hobchannel.send(f"The current hobby is {current}. Use !complete, !veto, or !later to close this hobby.")
+        return
+        
+    laterjson = futils.get_json_from_file(PATH_LATER)
+    
+    #name of new hobby from later.json
+    newhobby = list(laterjson[hobby].keys())[0]
+
+    if (newhobby == None):
+        await hobchannel.send(f"Could not find {hobby} in later.json.")
+        return
+
+    with open(PATH_CURRENT, "w") as currentfile:
+        newjson = {
+            "name": newhobby,
+            "vetoers": [],
+            "notes": ""
+        }
+        currentfile.write(json.dumps(newjson))
+    
+    await hobchannel.send(f"{newhobby} has been picked as the new hobby!")
 
 
 #print current hobby

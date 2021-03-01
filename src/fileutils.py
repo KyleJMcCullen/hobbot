@@ -16,7 +16,7 @@ def file_length(path):
     return len(open(path).readlines())
 
 
-#get return json dictionary
+#return json dictionary
 def get_json_from_file(path):
     with open(path) as f:
         return json.load(f)
