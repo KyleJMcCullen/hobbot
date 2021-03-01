@@ -174,13 +174,13 @@ async def pick_hobby_from_later(hobby, hobchannel):
     try:
         newhobbyjson = laterjson[hobby]
     except KeyError:
-        await hobchannel.send(f"Could not find {hobby} in later.json.")
+        await hobchannel.send(f"Could not find {hobby} in later.json (was KeyError).")
         return
 
     #idk if i need this still
-    #if (newhobbyjson == None):
-    #    await hobchannel.send(f"Could not find {hobby} in later.json.")
-    #    return
+    if (newhobbyjson == None):
+        await hobchannel.send(f"Could not find {hobby} in later.json (was None).")
+        return
 
     with open(PATH_CURRENT, "w") as currentfile:
         newjson = {
