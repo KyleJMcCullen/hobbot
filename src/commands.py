@@ -171,7 +171,11 @@ async def pick_hobby_from_later(hobby, hobchannel):
     laterjson = futils.get_json_from_file(PATH_LATER)
     
     #name of new hobby from later.json
-    newhobby = list(laterjson[hobby].keys())[0]
+    try:
+        newhobby = list(laterjson[hobby].keys())[0]
+    except KeyError:
+        await hobchannel.send(f"Could not find {hobby} in later.json.")
+        return
 
     if (newhobby == None):
         await hobchannel.send(f"Could not find {hobby} in later.json.")
