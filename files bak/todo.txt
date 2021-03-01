@@ -67,7 +67,6 @@ Djembe
 DJing
 Do it yourself 
 Drama 
-Drawing 
 Drink mixing
 Drinking
 Electronic games
@@ -118,7 +117,6 @@ Knife making
 Knitting 
 Knot tying
 Kombucha brewing
-Kung fu
 Lace making 
 Lapidary 
 Leather crafting
@@ -191,7 +189,6 @@ Sewing
 Shoemaking
 Singing 
 Sketching 
-Skipping rope
 Slot car
 Soapmaking 
 Social media
@@ -373,7 +370,6 @@ Sun bathing
 Surfing 
 Survivalism
 Swimming 
-Taekwondo 
 Tai chi 
 Tennis
 Thru-hiking
@@ -502,7 +498,6 @@ Longboarding
 Long-distance running
 Marching band
 Mini Golf
-Model aircraft
 Orienteering
 Pickleball
 Powerboat racing
@@ -543,7 +538,6 @@ Reading
 Research
 Shortwave listening 
 Aircraft spotting
-Amateur astronomy 
 Benchmarking
 Birdwatching
 Bus spotting
@@ -557,7 +551,6 @@ Photography
 Satellite watching
 Trainspotting
 Whale watching
-Magnet Fishing
 rock tumbling
 slot car racing
 flower pressing
