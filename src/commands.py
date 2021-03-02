@@ -23,6 +23,8 @@ from constants import PATH_VETOED
 
 #add a note to the current hobby
 async def add_note_to_current(note, authorname, hobchannel):
+    note = helpers.unembed_links(note)
+    
     jsondata = futils.get_json_from_file(PATH_CURRENT)
     
     current = info.get_current_hobby_name()
@@ -230,6 +232,23 @@ async def print_current_hobby(hobchannel):
     
     if len(notes) > 0:
         await hobchannel.send(f"Notes: \n{notes}")
+
+
+#get date, notes, and vetoes of a completed hobby
+async def print_hobby_info(hobby, hobchannel):
+    completejson = futils.get_json_from_file(PATH_COMPLETE)
+
+    try:
+        hobbyjson = completejson[hobby]
+        date = hobbyjson["date"]
+        vetoers = hobbyjson["vetoers"]
+        notes = hobbyjson["notes"]
+
+        outstr = f"{hobby} (Completed {date})\nVetoed by: {vetoers}\n\~\~\~Notes\~\~\~\n{notes}"
+        await hobchannel.send(outstr)
+    except KeyError:
+        await hobchannel.send(f"Could not find {hobby} in `complete.json`. " + \
+            "Keep in mind that my brain is small and it has to match perfectly, including capitalization.")
 
 
 #output info from file, or upload the file if too long

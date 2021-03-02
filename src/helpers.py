@@ -4,6 +4,7 @@ backend-y helpers
 
 import datetime
 import json
+import re
 
 from constants import JSON_NO_HOBBY
 from constants import PATH_CURRENT
@@ -90,6 +91,16 @@ def prettify_dict(d, indent=0):
             outstr += '\t' * (indent+1) + str(value) + "\n"
 
     return outstr
+
+
+#add <angled brackets> around urls, return the string
+def unembed_links(string):
+    #match url, from https://www.geeksforgeeks.org/python-check-url-string/
+    urls = re.findall(r'(https?://\S+)', string)
+    for url in urls:
+        string = string.replace(url, f"<{url}>")
+    
+    return string
 
 
 """ unused, but holding on to it just in case

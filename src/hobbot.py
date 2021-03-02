@@ -25,10 +25,6 @@ hobchannel = None
 
 client = discord.Client()
 
-# TODO
-# - retrieve info about a completed hobby
-
-
 #boot
 @client.event
 async def on_ready():
@@ -100,6 +96,8 @@ async def on_message(msg):
         await cmd.add_note_to_current(msgtext[9:], msg.author.name, hobchannel)
     elif (str.startswith(msgtext, "!pickhobby ")):
         await cmd.pick_hobby_from_later(msgtext[11:], hobchannel)
+    elif (str.startswith(msgtext, "!info ")):
+        await cmd.print_hobby_info(msgtext[6:], hobchannel)
 
     #testing
     elif (msgtext == "greetings hobbot" or msgtext == "good morning hobbot" or msgtext == "good afternoon hobbot"):
