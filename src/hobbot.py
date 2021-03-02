@@ -27,8 +27,6 @@ client = discord.Client()
 
 # TODO
 # - retrieve info about a completed hobby
-# - pull from "later" bin
-# - make list{file} functions print out up to 2000 chars before uploading file
 
 
 #boot
@@ -77,13 +75,15 @@ async def on_message(msg):
     if (msgtext == "!help"):
         await cmd.list_commands(hobchannel)
     elif (msgtext == "!listall"):
-        await cmd.upload_file_to_channel(PATH_ALL, hobchannel)
+        await cmd.print_info_from_file(PATH_ALL, hobchannel)
     elif (msgtext == "!listlater"):
-        await cmd.upload_file_to_channel(PATH_LATER, hobchannel)
+        await cmd.print_info_from_file(PATH_LATER, hobchannel)
     elif (msgtext == "!listtodo"):
-        await cmd.upload_file_to_channel(PATH_TODO, hobchannel)
+        await cmd.print_info_from_file(PATH_TODO, hobchannel)
     elif (msgtext == "!listvetoed"):
-        await cmd.upload_file_to_channel(PATH_VETOED, hobchannel)
+        await cmd.print_info_from_file(PATH_VETOED, hobchannel)
+    elif (msgtext in ["!listcompleted", "!listcomplete"]):
+        await cmd.print_info_from_file(PATH_COMPLETE, hobchannel)
     elif (msgtext == "!newhobby"):
         await cmd.new_hobby(hobchannel)
     elif (msgtext in ["!currenthobby", "!current"]):

@@ -77,6 +77,21 @@ def move_current_to_other_file_with_date(path, hobchannel):
     clear_current_hobby(hobchannel)
 
 
+#return dict as string in nice format
+#(from https://stackoverflow.com/a/3229493)
+def prettify_dict(d, indent=0):
+    outstr = ""
+
+    for key, value in d.items():
+        outstr += '\t' * indent + str(key) + "\n"
+        if isinstance(value, dict):
+            outstr += prettify_dict(value, indent+1)
+        else:
+            outstr += '\t' * (indent+1) + str(value) + "\n"
+
+    return outstr
+
+
 """ unused, but holding on to it just in case
 #ask for a confirmation
 async def request_confirmation(type, hobchannel):
