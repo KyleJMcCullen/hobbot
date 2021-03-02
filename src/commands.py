@@ -84,7 +84,8 @@ async def list_commands(hobchannel):
         "!complete": "Move current hobby to the list of completed hobbies",
         "!veto": f"Vote to veto a hobby ({NUM_VETOES_TO_SKIP} needed to skip)",
         "!later": "Move current hobby to the list of hobbies to be completed later",
-        "!addnote [note]": "Add a note to the current hobby"
+        "!addnote [note]": "Add a note to the current hobby",
+        "!pickhobby [hobby incl. capitalization]": "Pick a hobby from the 'later' list and set it as the current hobby"
     }
 
     outstr = ""
@@ -182,17 +183,23 @@ async def pick_hobby_from_later(hobby, hobchannel):
         await hobchannel.send(f"Could not find {hobby} in later.json (was None).")
         return
 
-    print("\n\nlaterjson: " + str(laterjson))
-    print("\n" + str(newhobbyjson) + "\n\n")
+    vetoers = newhobbyjson["vetoers"]
+    notes = newhobbyjson["notes"]
 
     with open(PATH_CURRENT, "w") as currentfile:
         newjson = {
             "name": hobby.capitalize(),
-            "vetoers": laterjson["vetoers"],
-            "notes": laterjson["notes"]
+            "vetoers": vetoers,
+            "notes": notes
         }
         currentfile.write(json.dumps(newjson))
     
+    #remove from later.json
+    del laterjson[hobby]
+
+    with open(PATH_LATER, "w") as laterfile:
+        json.dump(laterjson, laterfile)
+
     await hobchannel.send(f"{hobby} has been picked as the new hobby!")
 
 
