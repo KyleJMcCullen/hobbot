@@ -79,7 +79,7 @@ async def list_commands(hobchannel):
         "!listtodo": "Get list of hobbies that have yet to be completed",
         "!listvetoed": "Get list of vetoed hobbies",
         "!newhobby": "Pull a new hobby from the todo list",
-        "!current *or* !currenthobby": "Get name and veto count of current hobby",
+        "!current *or* !currenthobby": "Get name, veto count, and notes of current hobby",
         "!summary": "Try to pull a summary of the current hobby from Wikipedia",
         "!complete": "Move current hobby to the list of completed hobbies",
         "!veto": f"Vote to veto a hobby ({NUM_VETOES_TO_SKIP} needed to skip)",
@@ -207,12 +207,16 @@ async def pick_hobby_from_later(hobby, hobchannel):
 async def print_current_hobby(hobchannel):
     current = info.get_current_hobby_name()
     vetoes = info.get_current_vetoes()
+    notes = info.get_current_notes()
 
     if current == JSON_NO_HOBBY:
         await hobchannel.send("No current hobby. Use !newhobby to pick a new hobby.")
         return
 
     await hobchannel.send(f"Current hobby is {current} ({vetoes} vetoes).")
+    
+    if len(notes) > 0:
+        await hobchannel.send(f"Notes: \n{notes}")
 
 
 #get wikipedia blurb for topic
