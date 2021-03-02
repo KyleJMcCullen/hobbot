@@ -182,7 +182,7 @@ async def pick_hobby_from_later(hobby, hobchannel):
         await hobchannel.send(f"Could not find {hobby} in later.json (was None).")
         return
 
-    print("\n\nlaterjson: " + (laterjson))
+    print("\n\nlaterjson: " + str(laterjson))
     print("\n" + str(newhobbyjson) + "\n\n")
 
     with open(PATH_CURRENT, "w") as currentfile:
