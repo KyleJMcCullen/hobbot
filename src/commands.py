@@ -54,8 +54,21 @@ async def handle_veto(author, hobchannel):
         return
 
     if (vetoes+1) >= NUM_VETOES_TO_SKIP:
-        helpers.move_current_to_other_file(PATH_VETOED, hobchannel)
+        #creating this now means we don't have to do anything
+        #fancy to get an 'and' in the output string
         vetoersstr = ", ".join(vetoers)
+
+        #add user to vetoers
+        vetoers.append(author.name)
+
+        jsondata = futils.get_json_from_file(PATH_CURRENT)
+        
+        jsondata["vetoers"] = vetoers
+
+        with open(PATH_CURRENT, "w") as currentfile:
+            json.dump(jsondata, currentfile)
+
+        helpers.move_current_to_other_file(PATH_VETOED, hobchannel)
         await hobchannel.send(f"{current} has been vetoed by {vetoersstr}, and {author.name}!")
     else:
         vetoers.append(author.name) #use username, not nickname
@@ -219,6 +232,43 @@ async def print_current_hobby(hobchannel):
         await hobchannel.send(f"Notes: \n{notes}")
 
 
+#output info from file, or upload the file if too long
+async def print_info_from_file(path, hobchannel):
+    #special case for completed: only list hobby names, no info
+    if (path == PATH_COMPLETE):
+        jsondata = futils.get_json_from_file(path)
+        outstr = ""
+        for key in sorted(jsondata.keys()):
+            outstr += "- " + key + "\n"
+        
+        outstr = outstr.strip()
+        await hobchannel.send(outstr)
+        return
+    
+    try:
+        jsondata = futils.get_json_from_file(path)
+    except json.decoder.JSONDecodeError:
+        jsondata = None
+    
+    outstr = ""
+
+    #text file, print line-by-line
+    if jsondata == None:
+        with open(path) as f:
+            for line in f.readlines():
+                outstr += line
+    #else, it's json, print it
+    else:
+        outstr = helpers.prettify_dict(jsondata).strip()
+
+    #discord only allows messages up to 2k - to not spam the channel,
+    #we'll just upload the file if it's longer
+    if len(outstr) < 2000:
+        await hobchannel.send(outstr)
+    else:
+        await upload_file_to_channel(path, hobchannel)
+
+
 #get wikipedia blurb for topic
 async def print_summary(hobchannel):
     topic = info.get_current_hobby_name()
@@ -233,6 +283,6 @@ async def print_summary(hobchannel):
         await hobchannel.send("Could not find or suggest wikipedia page for " + topic)
 
 
-#upload file given path relative to hobbot.py
-async def upload_file_to_channel(relPath, channel):
-    await channel.send(file=discord.File(relPath))
+#upload file given path
+async def upload_file_to_channel(path, channel):
+    await channel.send(file=discord.File(path))
