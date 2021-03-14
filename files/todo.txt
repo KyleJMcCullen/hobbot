@@ -12,13 +12,11 @@ Baking
 Basketball
 Baton twirling
 Beatboxing
-Beer tasting
 Binge-watching
 Blogging
 Board/tabletop games
 Book discussion clubs
 Book restoration
-Bowling
 Brazilian jiu-jitsu
 Breadmaking
 Building
@@ -251,7 +249,6 @@ Beekeeping
 Birdwatching 
 Blacksmithing
 BMX 
-Board sports 
 Bodybuilding 
 Bonsai
 Butterfly watching
@@ -295,7 +292,6 @@ High-power rocketry
 Hiking 
 Hobby horsing
 Hobby tunneling
-Hooping 
 Horseback riding
 Hunting 
 Inline skating 
@@ -408,13 +404,11 @@ Teaching
 Web design
 coding
 Animal fancy 
-Axe throwing
 Backgammon
 Badminton 
 Baton twirling
 Beauty pageants
 Billiards 
-Bowling 
 Boxing 
 Bridge
 Checkers (draughts)
