@@ -51,7 +51,7 @@ async def handle_veto(author, hobchannel):
     if (nick == None):
             nick = author.name
 
-    if (nick in vetoers):
+    if (author.name in vetoers):
         await hobchannel.send(f"{nick} has already vetoed {current}!")
         return
 
