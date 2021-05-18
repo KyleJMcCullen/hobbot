@@ -1,1 +1,35 @@
-{"Skipping rope": {"vetoers": ["Proto-Geo", "Caesura"], "notes": ""}, "Amateur astronomy": {"vetoers": [], "notes": ""}, "Magnet Fishing": {"vetoers": [], "notes": ""}, "Board sports": {"vetoers": [], "notes": ""}, "Bowling": {"vetoers": [], "notes": ""}, "Axe throwing": {"vetoers": [], "notes": ""}}
+{
+    "Skipping rope": {
+        "vetoers": [
+            "Proto-Geo",
+            "Caesura"
+        ],
+        "notes": ""
+    },
+    "Amateur astronomy": {
+        "vetoers": [],
+        "notes": ""
+    },
+    "Magnet Fishing": {
+        "vetoers": [],
+        "notes": ""
+    },
+    "Board sports": {
+        "vetoers": [],
+        "notes": ""
+    },
+    "Bowling": {
+        "vetoers": [],
+        "notes": ""
+    },
+    "Axe throwing": {
+        "vetoers": [],
+        "notes": ""
+    },
+    "Golfing": {
+        "vetoers": [
+            "Caesura"
+        ],
+        "notes": ""
+    }
+}

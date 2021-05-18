@@ -1,1 +1,34 @@
-{"Taekwondo": {"vetoers": ["Proto-Geo", "Caesura", "Caylihn"], "notes": ""}, "Kung fu": {"vetoers": ["Caylihn", "Proto-Geo", "Caesura"], "notes": ""}, "Hooping": {"vetoers": ["Proto-Geo", "Caesura", "Caylihn"], "notes": ""}}
+{
+    "Taekwondo": {
+        "vetoers": [
+            "Proto-Geo",
+            "Caesura",
+            "Caylihn"
+        ],
+        "notes": ""
+    },
+    "Kung fu": {
+        "vetoers": [
+            "Caylihn",
+            "Proto-Geo",
+            "Caesura"
+        ],
+        "notes": ""
+    },
+    "Hooping": {
+        "vetoers": [
+            "Proto-Geo",
+            "Caesura",
+            "Caylihn"
+        ],
+        "notes": ""
+    },
+    "Astronomy": {
+        "vetoers": [
+            "Caesura",
+            "Caylihn",
+            "KRye"
+        ],
+        "notes": "we already have amateur astronomy (Proto-Geo)"
+    }
+}
